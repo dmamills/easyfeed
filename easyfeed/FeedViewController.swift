@@ -14,8 +14,10 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var currentFeedUrl : String!
     var rssFeed : RssFeed!
     var stories : [Story]!
+    var activeStories : [Story]!
     
     @IBOutlet weak var storiesTableView: UITableView!
+    @IBOutlet weak var storyFilterSegementControl: UISegmentedControl!
     
     var refreshControl : UIRefreshControl!
     
@@ -23,6 +25,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     let DARK_FONT_COLOR = UIColor.fromRGB(229, 243, 244)
     let LIGHT_BACKGROUND_COLOR = UIColor.fromRGB(255, 255, 255)
     let LIGHT_FONT_COLOR = UIColor.fromRGB(75, 77, 77)
+ 
     
     override func viewWillAppear(_ animated: Bool) {
         setTheme()
@@ -58,6 +61,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
         stories = []
+        activeStories = []
         setTheme()
         
 
@@ -96,15 +100,31 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         performSegue(withIdentifier: "showSettingsSegue", sender: self)
     }
     
+    @IBAction func onStoryFilterChanged(_ sender: UISegmentedControl) {
+        setStoriesFilter()
+        DispatchQueue.main.async {
+            self.storiesTableView.reloadData()
+        }
+    }
+    
+    func setStoriesFilter() {
+        if storyFilterSegementControl.selectedSegmentIndex == 0 {
+            activeStories = stories
+        } else {
+            activeStories = stories.filter({$0.contents != nil})
+        }
+    }
+
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return stories.count
+        return activeStories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: CELL_ID) as? StoryTableViewCell {
         
-            let story = stories[indexPath.row]
+            let story = activeStories[indexPath.row]
             let theme = UserDefaults().bool(forKey: "selected_theme") == true ? "dark" : "light"
             cell.configureUI(story, theme)
             return cell
@@ -118,7 +138,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let story = stories[indexPath.row]
+        let story = activeStories[indexPath.row]
         performSegue(withIdentifier: "showStorySegue", sender: story)
     }
     
@@ -151,7 +171,27 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         } else if feed != nil {
         
             self.rssFeed = feed
-            self.stories = rssFeed.items.map(self.mapItems)
+            
+            //get all current urls
+            let currentUrls = self.stories.map({ (item) -> String in
+                return item.url
+            })
+            
+            //get any stories that dont have a match
+            let newStories = feed?.items.filter({ (item) -> Bool in
+                return !currentUrls.contains(item.link)
+            }).map(self.mapItems)
+            
+            if newStories != nil {
+                newStories?.forEach({ story in
+                    self.stories.append(story)
+                })
+                //self.stories.append(newStories)
+                self.activeStories = self.stories
+            }
+            
+            setStoriesFilter()
+            
             DispatchQueue.main.async {
                 if self.refreshControl.isRefreshing == true {
                     self.refreshControl.endRefreshing()

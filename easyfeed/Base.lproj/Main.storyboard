@@ -61,9 +61,21 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="121" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="AIe-UK-71C">
                                 <rect key="frame" x="0.0" y="74" width="375" height="593"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <segmentedControl key="tableHeaderView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="sCN-DD-fzo">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <segments>
+                                        <segment title="New Stories"/>
+                                        <segment title="Saved Stories"/>
+                                    </segments>
+                                    <color key="tintColor" red="0.43551605939999999" green="0.42328700419999998" blue="0.43557858469999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <connections>
+                                        <action selector="onStoryFilterChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="SNK-Ah-bd7"/>
+                                    </connections>
+                                </segmentedControl>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="StoryCell" rowHeight="120" id="te2-My-W0K" customClass="StoryTableViewCell" customModule="easyfeed" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="120"/>
+                                        <rect key="frame" x="0.0" y="58" width="375" height="120"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="te2-My-W0K" id="KRK-QM-cYJ">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="120"/>
@@ -160,6 +172,7 @@
                     </view>
                     <connections>
                         <outlet property="storiesTableView" destination="AIe-UK-71C" id="aza-G6-G0R"/>
+                        <outlet property="storyFilterSegementControl" destination="sCN-DD-fzo" id="Rmo-xi-Ide"/>
                         <segue destination="Ruj-vY-MQF" kind="show" identifier="showStorySegue" id="VZ8-lO-agV"/>
                         <segue destination="MaK-vh-2n5" kind="show" identifier="showSettingsSegue" id="wfn-Vz-ysP"/>
                     </connections>

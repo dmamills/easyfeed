@@ -44,7 +44,6 @@ class StoryTableViewCell: UITableViewCell {
         }
     }
     
-    
     func configureUI(_ story: Story, _ theme : String) {
         
         let userDefaults = UserDefaults()
