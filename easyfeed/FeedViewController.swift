@@ -27,10 +27,27 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     let LIGHT_FONT_COLOR = UIColor.fromRGB(75, 77, 77)
  
     override func viewWillAppear(_ animated: Bool) {
+        
+        let userDefaults = UserDefaults()
+        let themeDark = userDefaults.bool(forKey: "selected_theme")
+        
+        ///TODO: check for settings changes
+        if themeDark { 
+            refreshControl.backgroundColor = DARK_BACKGROUND_COLOR
+            storyFilterSegementControl.tintColor = DARK_FONT_COLOR
+            storiesTableView.backgroundColor = DARK_BACKGROUND_COLOR
+            self.view.backgroundColor = DARK_BACKGROUND_COLOR
+        } else {
+            storyFilterSegementControl.tintColor = LIGHT_FONT_COLOR
+            refreshControl.backgroundColor = LIGHT_BACKGROUND_COLOR
+            storiesTableView.backgroundColor = LIGHT_BACKGROUND_COLOR
+            self.view.backgroundColor = LIGHT_BACKGROUND_COLOR
+        }
+        
         DispatchQueue.main.async {
             self.storiesTableView.reloadData()
         }
-        //TODO: check for settings changes
+
     }
     
     func refresh(_ refreshControl : UIRefreshControl) {
@@ -67,13 +84,11 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         stories = []
         activeStories = []
         
-        
         //Debug feeds
-        let a = ["http://rss.cbc.ca/lineup/canada.xml", "http://rss.cbc.ca/lineup/politics.xml", "http://rss.cbc.ca/lineup/health.xml"]
-        let userDefaults = UserDefaults()
-        userDefaults.set(a, forKey: "feed_urls")
+        //let a = ["http://rss.cbc.ca/lineup/canada.xml", "http://rss.cbc.ca/lineup/politics.xml", "http://rss.cbc.ca/lineup/health.xml"]
+        //let userDefaults = UserDefaults()
+        //userDefaults.set(a, forKey: "feed_urls")
         //userDefaults.removeObject(forKey: "feed_urls")
-        
         
         feedManager = FeedManager()
         if feedManager.isEmpty() {
@@ -113,8 +128,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
             activeStories = stories.filter({$0.contents != nil})
         }
     }
-
-    
+  
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return activeStories.count
     }

@@ -64,10 +64,11 @@ class StoryTableViewCell: UITableViewCell {
             self.downloadBtn.setImage(UIImage(named: "star-unselected"), for: UIControlState.normal)
         }
         
+        //TODO: when feed image added, show/hide
         if(showImages == true) {
-            self.downloadBtn.isHidden = false
+            //self.downloadBtn.isHidden = false
         } else {
-            self.downloadBtn.isHidden = true
+            //self.downloadBtn.isHidden = true
         }
     }
     
