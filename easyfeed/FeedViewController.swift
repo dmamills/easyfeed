@@ -10,16 +10,15 @@ import UIKit
 
 class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    let CELL_ID = "StoryCell"
-    var currentFeedUrl : String!
-    var currentFeedUrls : [String]!
-    var rssFeed : RssFeed!
+    let CELL_ID : String = "StoryCell"
+    
+    var feedManager : FeedManager!
+    var rssFeeds : [RssFeed]!
     var stories : [Story]!
     var activeStories : [Story]!
     
     @IBOutlet weak var storiesTableView: UITableView!
     @IBOutlet weak var storyFilterSegementControl: UISegmentedControl!
-    
     var refreshControl : UIRefreshControl!
     
     let DARK_BACKGROUND_COLOR = UIColor.fromRGB(52, 52, 61)
@@ -28,41 +27,35 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     let LIGHT_FONT_COLOR = UIColor.fromRGB(75, 77, 77)
  
     override func viewWillAppear(_ animated: Bool) {
-        setTheme()
-        
-        let userDefaults = UserDefaults()
-        
-        if let feedUrls = userDefaults.stringArray(forKey: "feed_urls") {
-            
-            if currentFeedUrls != nil && currentFeedUrls != feedUrls {
-                currentFeedUrls = feedUrls
-            
-                for var feed in feedUrls {
-                    loadFeed(feed)
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.storiesTableView.reloadData()
-                }
-            }
-        } else {
-            print("no feeds found")
-        }
-    }
-    
-    func loadFeed(_ feedUrl : String) {
-        let feedParser = FeedParser(feedUrl)
-        feedParser.parse(completed: self.onFeedCompleted)
+        //TODO: check for settings changes
     }
     
     func refresh(_ refresdhControl : UIRefreshControl) {
         
         //Refresh on background thread to allow spinner to animate properly
         DispatchQueue.global().async {
-            for var feed in self.currentFeedUrls {
-                self.loadFeed(feed)
+            self.loadFeeds()
+        }
+    }
+    
+    func loadFeeds() {
+        feedManager.loadFeeds { (feeds, error) in
+            if feeds != nil {
+                self.rssFeeds = feeds
+                self.rssFeeds.forEach(self.addFeedToStories)
+                
+                DispatchQueue.main.async {
+                    
+                    //Sort stories by date
+                    self.stories = self.stories.sorted(by: {$0.date < $1.date })
+                    self.setStoriesFilter()
+                    self.storiesTableView.reloadData()
+                    
+                    if self.refreshControl.isRefreshing == true {
+                        self.refreshControl.endRefreshing()
+                    }
+                }
             }
-            
         }
     }
    
@@ -70,39 +63,18 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.viewDidLoad()
         stories = []
         activeStories = []
-        setTheme()
         
-        let userDefaults = UserDefaults()
-        if let feedUrls = userDefaults.stringArray(forKey: "feed_urls") {
-            currentFeedUrls = feedUrls
-            
-            if currentFeedUrls.count == 0 {
-                DispatchQueue.main.async {
-                    self.performSegue(withIdentifier: "showSettingsSegue", sender: self)
-                }
-                return
-                
-            } else {
-                
-                //This doesnt work:
-                let feeds : [RssFeed?] = []
-                DispatchQueue.global().async {
-                    
-                    for var url in self.currentFeedUrls {
-                
-                        let feedParser = FeedParser(url)
-                        feedParser.parse(completed: { (feed, error) in
-                            self.onFeedCompleted(feed, error)
-                        })
-                    }
-                }
-            }
-        } else {
-            DispatchQueue.main.async {
-                self.performSegue(withIdentifier: "showSettingsSegue", sender: self)
-            }
-        }
         
+        //Debug feeds
+        //let a = ["http://rss.cbc.ca/lineup/canada.xml", "http://rss.cbc.ca/lineup/politics.xml", "http://rss.cbc.ca/lineup/health.xml"]
+        //let userDefaults = UserDefaults()
+        //userDefaults.set(a, forKey: "feed_urls")
+        
+        
+        feedManager = FeedManager()
+        loadFeeds()
+        
+        //Table view setup
         storiesTableView.delegate = self
         storiesTableView.dataSource = self
         
@@ -124,6 +96,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func setStoriesFilter() {
+        // show all stories, otherwise only show those that have already been loaded
         if storyFilterSegementControl.selectedSegmentIndex == 0 {
             activeStories = stories
         } else {
@@ -151,9 +124,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
         tableView.deselectRow(at: indexPath, animated: true)
-        
         let story = activeStories[indexPath.row]
         performSegue(withIdentifier: "showStorySegue", sender: story)
     }
@@ -169,58 +140,30 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    private func mapItems(_ item: FeedItem) -> Story {
+    private func addFeedToStories(_ feed : RssFeed) {
         
-        //Only take first 3 categores, and ensure they are capitalized
-        let categories = item.categories.prefix(3)
-        let categoryStr = categories.map({ (category) -> String in
-            return category.capitalized
-        }).joined(separator: " / ")
+        //get a list of all currently displayed stories urls
+        let currentUrls = self.stories.map({ (item) -> String in
+            return item.url
+        })
         
-        return Story.init(item.link ?? "", item.title ?? "", item.pubDate, item.description ?? "", rssFeed.title ?? "", categoryStr)
-    }
-    
-    private func onFeedCompleted(_ feed: RssFeed?, _ error : Error?) {
-        
-        print("LOADED FEED")
-        if error != nil {
-            print("error")
-        } else if feed != nil {
-        
+        //get any stories that dont have a match
+        let newStories = feed.items.filter({ (item) -> Bool in
+            return !currentUrls.contains(item.link)
+        }).map { (item) -> Story in
             
-            self.rssFeed = feed
+            //Only take first 3 categores, and ensure they are capitalized
+            let categories = item.categories.prefix(3)
+            let categoryStr = categories.map({ (category) -> String in
+                return category.capitalized
+            }).joined(separator: " / ")
             
-            //get all current urls
-            let currentUrls = self.stories.map({ (item) -> String in
-                return item.url
-            })
-            
-            //get any stories that dont have a match
-            let newStories = feed?.items.filter({ (item) -> Bool in
-                return !currentUrls.contains(item.link)
-            }).map(self.mapItems)
-            
-            if newStories != nil {
-                newStories?.forEach({ story in
-                    self.stories.append(story)
-                })
-                
-                //self.stories.append(newStories)
-                self.activeStories = self.stories
-            }
-            
-            setStoriesFilter()
-            
-            DispatchQueue.main.async {
-                if self.refreshControl.isRefreshing == true {
-                    self.refreshControl.endRefreshing()
-                }
-                self.storiesTableView.reloadData()
-            }
+            return Story.init(item.link ?? "", item.title ?? "", item.pubDate, item.description ?? "", feed.title ?? "", categoryStr)
         }
         
+        //add new stories to list
+        newStories.forEach({ story in
+            self.stories.append(story)
+        })
     }
-    
-    private func setTheme() {}
-
 }

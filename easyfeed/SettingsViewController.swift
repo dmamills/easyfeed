@@ -20,12 +20,18 @@ class SettingsViewController: UIViewController, UITextFieldDelegate, UITableView
     var feedUrls : [String]!
     
     @IBAction func onRemoveBtn(_ sender: UIButton) {
-            if let cell = view.superview?.superview as? SettingsFeedTableViewCell {
-            if let indexPath = feedsTableView.indexPath(for: cell) {
-                feedUrls.remove(at: indexPath.row)
-                DispatchQueue.main.async {
-                    self.feedsTableView.reloadData()
+        
+        if let superview = sender.superview {
+            if let cell = superview.superview as? SettingsFeedTableViewCell {
+                
+                let url = cell.urlLabel.text ?? ""
+                if let idx = feedUrls.index(of: url) {
+                    feedUrls.remove(at: idx)
+                    DispatchQueue.main.async {
+                        self.feedsTableView.reloadData()
+                    }
                 }
+                
             }
         }
     }
@@ -39,7 +45,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        tableView.deselectRow(at: indexPath, animated: false)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
