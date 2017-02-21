@@ -27,10 +27,13 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     let LIGHT_FONT_COLOR = UIColor.fromRGB(75, 77, 77)
  
     override func viewWillAppear(_ animated: Bool) {
+        DispatchQueue.main.async {
+            self.storiesTableView.reloadData()
+        }
         //TODO: check for settings changes
     }
     
-    func refresh(_ refresdhControl : UIRefreshControl) {
+    func refresh(_ refreshControl : UIRefreshControl) {
         
         //Refresh on background thread to allow spinner to animate properly
         DispatchQueue.global().async {
@@ -66,13 +69,20 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         
         //Debug feeds
-        //let a = ["http://rss.cbc.ca/lineup/canada.xml", "http://rss.cbc.ca/lineup/politics.xml", "http://rss.cbc.ca/lineup/health.xml"]
-        //let userDefaults = UserDefaults()
-        //userDefaults.set(a, forKey: "feed_urls")
+        let a = ["http://rss.cbc.ca/lineup/canada.xml", "http://rss.cbc.ca/lineup/politics.xml", "http://rss.cbc.ca/lineup/health.xml"]
+        let userDefaults = UserDefaults()
+        userDefaults.set(a, forKey: "feed_urls")
+        //userDefaults.removeObject(forKey: "feed_urls")
         
         
         feedManager = FeedManager()
-        loadFeeds()
+        if feedManager.isEmpty() {
+            DispatchQueue.main.async {
+                self.performSegue(withIdentifier: "showSettingsSegue", sender: self)
+            }
+        } else {
+            loadFeeds()
+        }
         
         //Table view setup
         storiesTableView.delegate = self

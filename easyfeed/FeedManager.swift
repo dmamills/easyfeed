@@ -70,8 +70,15 @@ class FeedManager {
         
         group.notify(queue: .main, execute: {
             completed(self.rssFeeds, nil)
-            print("all loaded")
         })
+    }
+    
+    func isEmpty() -> Bool {
+        if feedUrls == nil {
+            fetchUrls()
+        }
+
+        return feedUrls.count == 0
     }
     
     private func persistUrls() {
@@ -80,10 +87,10 @@ class FeedManager {
     
     private func fetchUrls() {
         
-        feedUrls = userDefaults.stringArray(forKey: FEED_KEY)
+        self.feedUrls = userDefaults.stringArray(forKey: FEED_KEY)
         
         if feedUrls == nil {
-            feedUrls = []
+            self.feedUrls = []
             persistUrls()
         }
     }

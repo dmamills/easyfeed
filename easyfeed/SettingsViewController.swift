@@ -31,7 +31,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate, UITableView
                         self.feedsTableView.reloadData()
                     }
                 }
-                
             }
         }
     }
@@ -42,6 +41,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate, UITableView
         
         feedsTableView.delegate = self
         feedsTableView.dataSource = self
+        feedsTableView.allowsSelection = false
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -68,7 +68,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate, UITableView
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
         textField.resignFirstResponder()
         return true
     }
@@ -126,10 +125,9 @@ class SettingsViewController: UIViewController, UITextFieldDelegate, UITableView
             urlErrorLabel.text = "Must have at least one feed"
         } else {
             urlErrorLabel.text = ""
+            
             userDefaults.set((theme == "dark"), forKey: "selected_theme")
             userDefaults.set(feedUrls, forKey: "feed_urls")
-            
-            print("saving: \(showImages)")
             userDefaults.set(showImages, forKey: "show_images")
         
             dismiss(animated: true, completion: nil)

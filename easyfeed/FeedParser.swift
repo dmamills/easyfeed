@@ -101,7 +101,7 @@ class FeedParser : NSObject, XMLParserDelegate {
             
             if parsingImageInfo == true {
                 switch currentElement {
-                    case NODE_TITLE:
+                case NODE_TITLE:
                     rssFeed.imageTitle = currentElementValue
                 case NODE_LINK:
                     rssFeed.imageLink = currentElementValue
@@ -134,7 +134,6 @@ class FeedParser : NSObject, XMLParserDelegate {
         } else {
             
             switch currentElement {
-            
             case NODE_TITLE:
                 currentFeedItem.title = currentElementValue
             case NODE_LINK:
