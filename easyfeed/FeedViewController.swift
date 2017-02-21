@@ -12,6 +12,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     let CELL_ID = "StoryCell"
     var currentFeedUrl : String!
+    var currentFeedUrls : [String]!
     var rssFeed : RssFeed!
     var stories : [Story]!
     var activeStories : [Story]!
@@ -26,22 +27,26 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     let LIGHT_BACKGROUND_COLOR = UIColor.fromRGB(255, 255, 255)
     let LIGHT_FONT_COLOR = UIColor.fromRGB(75, 77, 77)
  
-    
     override func viewWillAppear(_ animated: Bool) {
         setTheme()
         
         let userDefaults = UserDefaults()
-        if let feedUrl = userDefaults.string(forKey: "feed_url") {
-            if feedUrl != currentFeedUrl {
-                //load new feed
-                loadFeed(feedUrl)
-                currentFeedUrl = feedUrl
+        
+        if let feedUrls = userDefaults.stringArray(forKey: "feed_urls") {
+            
+            if currentFeedUrls != nil && currentFeedUrls != feedUrls {
+                currentFeedUrls = feedUrls
+            
+                for var feed in feedUrls {
+                    loadFeed(feed)
+                }
             } else {
-                //Just reset theme
                 DispatchQueue.main.async {
                     self.storiesTableView.reloadData()
                 }
             }
+        } else {
+            print("no feeds found")
         }
     }
     
@@ -54,7 +59,10 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         //Refresh on background thread to allow spinner to animate properly
         DispatchQueue.global().async {
-            self.loadFeed(self.currentFeedUrl)
+            for var feed in self.currentFeedUrls {
+                self.loadFeed(feed)
+            }
+            
         }
     }
    
@@ -64,22 +72,30 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         activeStories = []
         setTheme()
         
-
         let userDefaults = UserDefaults()
-        
-        //userDefaults.removeObject(forKey: "feed_url")
-        //userDefaults.set("https://www.wired.com/feed/", forKey: "feed_url")
-        
-        if let feedUrl = userDefaults.string(forKey: "feed_url") {
-            currentFeedUrl = feedUrl
-            if currentFeedUrl.isEmpty {
+        if let feedUrls = userDefaults.stringArray(forKey: "feed_urls") {
+            currentFeedUrls = feedUrls
+            
+            if currentFeedUrls.count == 0 {
                 DispatchQueue.main.async {
                     self.performSegue(withIdentifier: "showSettingsSegue", sender: self)
                 }
                 return
                 
             } else {
-                loadFeed(currentFeedUrl)
+                
+                //This doesnt work:
+                let feeds : [RssFeed?] = []
+                DispatchQueue.global().async {
+                    
+                    for var url in self.currentFeedUrls {
+                
+                        let feedParser = FeedParser(url)
+                        feedParser.parse(completed: { (feed, error) in
+                            self.onFeedCompleted(feed, error)
+                        })
+                    }
+                }
             }
         } else {
             DispatchQueue.main.async {
@@ -166,10 +182,12 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     private func onFeedCompleted(_ feed: RssFeed?, _ error : Error?) {
         
+        print("LOADED FEED")
         if error != nil {
             print("error")
         } else if feed != nil {
         
+            
             self.rssFeed = feed
             
             //get all current urls
@@ -186,6 +204,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 newStories?.forEach({ story in
                     self.stories.append(story)
                 })
+                
                 //self.stories.append(newStories)
                 self.activeStories = self.stories
             }

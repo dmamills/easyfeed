@@ -18,6 +18,7 @@
 		857EA4761E556A78000F7619 /* StoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857EA4751E556A78000F7619 /* StoryTableViewCell.swift */; };
 		857EA4791E556AD3000F7619 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857EA4781E556AD3000F7619 /* Story.swift */; };
 		85C1A6501E5795B4006F4073 /* UIColor+fromRGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C1A64F1E5795B4006F4073 /* UIColor+fromRGB.swift */; };
+		85E0025D1E5B4E670064982B /* SettingsFeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E0025C1E5B4E670064982B /* SettingsFeedTableViewCell.swift */; };
 		85FE9A631E5604E60065437E /* FeedParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FE9A621E5604E60065437E /* FeedParser.swift */; };
 		85FE9A651E5638660065437E /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FE9A641E5638660065437E /* FeedItem.swift */; };
 		85FE9A671E56394F0065437E /* Date+parseFromString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FE9A661E56394F0065437E /* Date+parseFromString.swift */; };
@@ -38,6 +39,7 @@
 		857EA4751E556A78000F7619 /* StoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryTableViewCell.swift; sourceTree = "<group>"; };
 		857EA4781E556AD3000F7619 /* Story.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Story.swift; sourceTree = "<group>"; };
 		85C1A64F1E5795B4006F4073 /* UIColor+fromRGB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+fromRGB.swift"; sourceTree = "<group>"; };
+		85E0025C1E5B4E670064982B /* SettingsFeedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsFeedTableViewCell.swift; sourceTree = "<group>"; };
 		85FE9A621E5604E60065437E /* FeedParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedParser.swift; sourceTree = "<group>"; };
 		85FE9A641E5638660065437E /* FeedItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedItem.swift; sourceTree = "<group>"; };
 		85FE9A661E56394F0065437E /* Date+parseFromString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+parseFromString.swift"; sourceTree = "<group>"; };
@@ -79,10 +81,10 @@
 		857EA45D1E5555D6000F7619 /* easyfeed */ = {
 			isa = PBXGroup;
 			children = (
+				85E0025E1E5B55850064982B /* TableCells */,
 				85D3F8C51E557B0300A0F6CB /* Util */,
 				857EA4771E556ACC000F7619 /* Models */,
-				857EA4701E5557E6000F7619 /* controllers */,
-				857EA4751E556A78000F7619 /* StoryTableViewCell.swift */,
+				857EA4701E5557E6000F7619 /* Controllers */,
 				857EA45E1E5555D6000F7619 /* AppDelegate.swift */,
 				857EA4621E5555D6000F7619 /* Main.storyboard */,
 				857EA4651E5555D6000F7619 /* Assets.xcassets */,
@@ -92,14 +94,14 @@
 			path = easyfeed;
 			sourceTree = "<group>";
 		};
-		857EA4701E5557E6000F7619 /* controllers */ = {
+		857EA4701E5557E6000F7619 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				857EA4601E5555D6000F7619 /* FeedViewController.swift */,
 				857EA4711E555825000F7619 /* StoryViewController.swift */,
 				857EA4731E55634B000F7619 /* SettingsViewController.swift */,
 			);
-			name = controllers;
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 		857EA4771E556ACC000F7619 /* Models */ = {
@@ -120,6 +122,15 @@
 				85C1A64F1E5795B4006F4073 /* UIColor+fromRGB.swift */,
 			);
 			name = Util;
+			sourceTree = "<group>";
+		};
+		85E0025E1E5B55850064982B /* TableCells */ = {
+			isa = PBXGroup;
+			children = (
+				857EA4751E556A78000F7619 /* StoryTableViewCell.swift */,
+				85E0025C1E5B4E670064982B /* SettingsFeedTableViewCell.swift */,
+			);
+			name = TableCells;
 			sourceTree = "<group>";
 		};
 		F9708C4C0BC88E4DE5D116C8 /* Pods */ = {
@@ -273,6 +284,7 @@
 				85FE9A691E56443D0065437E /* RssFeed.swift in Sources */,
 				857EA4761E556A78000F7619 /* StoryTableViewCell.swift in Sources */,
 				857EA4791E556AD3000F7619 /* Story.swift in Sources */,
+				85E0025D1E5B4E670064982B /* SettingsFeedTableViewCell.swift in Sources */,
 				85FE9A671E56394F0065437E /* Date+parseFromString.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
