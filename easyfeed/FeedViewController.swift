@@ -11,27 +11,27 @@ import UIKit
 class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     let CELL_ID : String = "StoryCell"
-    
+
     var feedManager : FeedManager!
     var rssFeeds : [RssFeed]!
+
     var stories : [Story]!
     var activeStories : [Story]!
-    
+
     @IBOutlet weak var storiesTableView: UITableView!
     @IBOutlet weak var storyFilterSegementControl: UISegmentedControl!
     var refreshControl : UIRefreshControl!
-    
+
     let DARK_BACKGROUND_COLOR = UIColor.fromRGB(52, 52, 61)
     let DARK_FONT_COLOR = UIColor.fromRGB(229, 243, 244)
     let LIGHT_BACKGROUND_COLOR = UIColor.fromRGB(255, 255, 255)
     let LIGHT_FONT_COLOR = UIColor.fromRGB(75, 77, 77)
- 
+
     override func viewWillAppear(_ animated: Bool) {
-        
+
         let userDefaults = UserDefaults()
         let themeDark = userDefaults.bool(forKey: "selected_theme")
-        
-        ///TODO: check for settings changes
+
         if themeDark { 
             refreshControl.backgroundColor = DARK_BACKGROUND_COLOR
             storyFilterSegementControl.tintColor = DARK_FONT_COLOR
@@ -43,53 +43,23 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
             storiesTableView.backgroundColor = LIGHT_BACKGROUND_COLOR
             self.view.backgroundColor = LIGHT_BACKGROUND_COLOR
         }
-        
+
         DispatchQueue.main.async {
             self.storiesTableView.reloadData()
         }
-
     }
     
-    func refresh(_ refreshControl : UIRefreshControl) {
-        
-        //Refresh on background thread to allow spinner to animate properly
-        DispatchQueue.global().async {
-            self.loadFeeds()
-        }
-    }
-    
-    func loadFeeds() {
-        feedManager.loadFeeds { (feeds, error) in
-            if feeds != nil {
-                self.rssFeeds = feeds
-                self.rssFeeds.forEach(self.addFeedToStories)
-                
-                DispatchQueue.main.async {
-                    
-                    //Sort stories by date
-                    self.stories = self.stories.sorted(by: {$0.date < $1.date })
-                    self.setStoriesFilter()
-                    self.storiesTableView.reloadData()
-                    
-                    if self.refreshControl.isRefreshing == true {
-                        self.refreshControl.endRefreshing()
-                    }
-                }
-            }
-        }
-    }
-   
     override func viewDidLoad() {
         super.viewDidLoad()
         stories = []
         activeStories = []
-        
+
         //Debug feeds
-        //let a = ["http://rss.cbc.ca/lineup/canada.xml", "http://rss.cbc.ca/lineup/politics.xml", "http://rss.cbc.ca/lineup/health.xml"]
-        //let userDefaults = UserDefaults()
-        //userDefaults.set(a, forKey: "feed_urls")
+        let a = ["http://rss.cbc.ca/lineup/canada.xml", "http://rss.cbc.ca/lineup/politics.xml", "http://rss.cbc.ca/lineup/health.xml"]
+        let userDefaults = UserDefaults()
+        userDefaults.set(a, forKey: "feed_urls")
         //userDefaults.removeObject(forKey: "feed_urls")
-        
+
         feedManager = FeedManager()
         if feedManager.isEmpty() {
             DispatchQueue.main.async {
@@ -98,11 +68,11 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         } else {
             loadFeeds()
         }
-        
+
         //Table view setup
         storiesTableView.delegate = self
         storiesTableView.dataSource = self
-        
+
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(FeedViewController.refresh(_:)), for: UIControlEvents.valueChanged)
         storiesTableView.refreshControl = refreshControl
@@ -120,6 +90,34 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
+    func refresh(_ refreshControl : UIRefreshControl) {
+        //Refresh on background thread to allow spinner to animate properly
+        DispatchQueue.global().async {
+            self.loadFeeds()
+        }
+    }
+
+    func loadFeeds() {
+        feedManager.loadFeeds { (feeds, error) in
+            if feeds != nil {
+                self.rssFeeds = feeds
+                self.rssFeeds.forEach(self.addFeedToStories)
+
+                DispatchQueue.main.async {
+
+                    //Sort stories by date
+                    self.stories = self.stories.sorted(by: {$0.date < $1.date })
+                    self.setStoriesFilter()
+                    self.storiesTableView.reloadData()
+
+                    if self.refreshControl.isRefreshing == true {
+                        self.refreshControl.endRefreshing()
+                    }
+                }
+            }
+        }
+    }
+    
     func setStoriesFilter() {
         // show all stories, otherwise only show those that have already been loaded
         if storyFilterSegementControl.selectedSegmentIndex == 0 {
@@ -134,14 +132,13 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+
         if let cell = tableView.dequeueReusableCell(withIdentifier: CELL_ID) as? StoryTableViewCell {
-        
+
             let story = activeStories[indexPath.row]
             let theme = UserDefaults().bool(forKey: "selected_theme") == true ? "dark" : "light"
             cell.configureUI(story, theme)
             return cell
-            
         } else {
             return UITableViewCell()
         }
@@ -154,7 +151,6 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         if segue.identifier == "showStorySegue" {
             if let vc = segue.destination as? StoryViewController {
                 if let story = sender as? Story {
@@ -165,17 +161,16 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     private func addFeedToStories(_ feed : RssFeed) {
-        
         //get a list of all currently displayed stories urls
         let currentUrls = self.stories.map({ (item) -> String in
             return item.url
         })
-        
+
         //get any stories that dont have a match
         let newStories = feed.items.filter({ (item) -> Bool in
             return !currentUrls.contains(item.link)
         }).map { (item) -> Story in
-            
+
             //Only take first 3 categores, and ensure they are capitalized
             let categories = item.categories.prefix(3)
             let categoryStr = categories.map({ (category) -> String in
@@ -184,7 +179,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             return Story.init(item.link ?? "", item.title ?? "", item.pubDate, item.description ?? "", feed.title ?? "", categoryStr)
         }
-        
+
         //add new stories to list
         newStories.forEach({ story in
             self.stories.append(story)

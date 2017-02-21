@@ -8,14 +8,6 @@
 
 import UIKit
 
-extension Date {
-    func specialFormat() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM/YY/DD"
-        return formatter.string(from: self)
-    }
-}
-
 class StoryViewController: UIViewController, UIGestureRecognizerDelegate {
 
     var story : Story!
@@ -27,31 +19,33 @@ class StoryViewController: UIViewController, UIGestureRecognizerDelegate {
         if gestureRecognizer is UITapGestureRecognizer {
                 dismiss(animated: true, completion: nil)
         }
-        
+
         return true
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        let swipeLeftGesture = UITapGestureRecognizer()
-        swipeLeftGesture.numberOfTapsRequired = 2
-        swipeLeftGesture.delegate = self
-        
-        webView.scrollView.addGestureRecognizer(swipeLeftGesture)
+        let doubleTapGesture = UITapGestureRecognizer()
+        doubleTapGesture.numberOfTapsRequired = 2
+        doubleTapGesture.delegate = self
+
+        webView.scrollView.addGestureRecognizer(doubleTapGesture)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setTheme()
-        
+
         let userDefaults = UserDefaults()
         let theme = userDefaults.bool(forKey: "selected_theme") == true ? "dark" : "light"
         let showImages = userDefaults.bool(forKey: "show_images")
-        
+        webView.backgroundColor = UIColor.clear
+        webView.isHidden = true
         story.loadStory(theme, showImages, completed: {
-            
+
             //TODO: Get cardcoded html strings for contaning + styling content
             self.webView.loadHTMLString(self.story.contents, baseURL: nil)
+            self.webView.isHidden = false
             print("Story Loaded")
         })
     }
@@ -63,7 +57,7 @@ class StoryViewController: UIViewController, UIGestureRecognizerDelegate {
 
     private func setTheme() {
         let userDefaults = UserDefaults()
-        
+
         if userDefaults.bool(forKey: "selected_theme") == true {
             print("set dark theme")
         } else {
