@@ -4,7 +4,7 @@ one of my first attempts a building an iOS app. requires a server running [extra
 
 ## preview
 
-![easyfeed](http://yomills.com/easyfeed.gif)
+![easyfeed](easyfeed.gif)
 
 ## features
 
