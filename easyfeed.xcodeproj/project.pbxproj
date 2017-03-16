@@ -17,6 +17,7 @@
 		857EA4741E55634B000F7619 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857EA4731E55634B000F7619 /* SettingsViewController.swift */; };
 		857EA4761E556A78000F7619 /* StoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857EA4751E556A78000F7619 /* StoryTableViewCell.swift */; };
 		857EA4791E556AD3000F7619 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857EA4781E556AD3000F7619 /* Story.swift */; };
+		85895B821E79B24E00B7CF80 /* StoryFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85895B811E79B24E00B7CF80 /* StoryFileManager.swift */; };
 		85C1A6501E5795B4006F4073 /* UIColor+fromRGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85C1A64F1E5795B4006F4073 /* UIColor+fromRGB.swift */; };
 		85E0025D1E5B4E670064982B /* SettingsFeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E0025C1E5B4E670064982B /* SettingsFeedTableViewCell.swift */; };
 		85E002601E5BC8FE0064982B /* FeedManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E0025F1E5BC8FE0064982B /* FeedManager.swift */; };
@@ -39,6 +40,7 @@
 		857EA4731E55634B000F7619 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		857EA4751E556A78000F7619 /* StoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryTableViewCell.swift; sourceTree = "<group>"; };
 		857EA4781E556AD3000F7619 /* Story.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Story.swift; sourceTree = "<group>"; };
+		85895B811E79B24E00B7CF80 /* StoryFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryFileManager.swift; sourceTree = "<group>"; };
 		85C1A64F1E5795B4006F4073 /* UIColor+fromRGB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+fromRGB.swift"; sourceTree = "<group>"; };
 		85E0025C1E5B4E670064982B /* SettingsFeedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsFeedTableViewCell.swift; sourceTree = "<group>"; };
 		85E0025F1E5BC8FE0064982B /* FeedManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedManager.swift; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 				85FE9A681E56443D0065437E /* RssFeed.swift */,
 				85FE9A661E56394F0065437E /* Date+parseFromString.swift */,
 				85C1A64F1E5795B4006F4073 /* UIColor+fromRGB.swift */,
+				85895B811E79B24E00B7CF80 /* StoryFileManager.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -286,6 +289,7 @@
 				857EA4741E55634B000F7619 /* SettingsViewController.swift in Sources */,
 				85C1A6501E5795B4006F4073 /* UIColor+fromRGB.swift in Sources */,
 				85FE9A691E56443D0065437E /* RssFeed.swift in Sources */,
+				85895B821E79B24E00B7CF80 /* StoryFileManager.swift in Sources */,
 				857EA4761E556A78000F7619 /* StoryTableViewCell.swift in Sources */,
 				857EA4791E556AD3000F7619 /* Story.swift in Sources */,
 				85E0025D1E5B4E670064982B /* SettingsFeedTableViewCell.swift in Sources */,
@@ -410,6 +414,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 71F299B4E7CB7F355094A72D /* Pods-easyfeed.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = Z7S85LAS2H;
 				INFOPLIST_FILE = easyfeed/Info.plist;
@@ -424,6 +429,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9FA8DAD4C49F6A8E2E83DF35 /* Pods-easyfeed.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = Z7S85LAS2H;
 				INFOPLIST_FILE = easyfeed/Info.plist;

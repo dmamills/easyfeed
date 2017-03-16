@@ -14,24 +14,28 @@ class Story {
     
     typealias DownloadComplete = () -> ()
     
-    //let BASE_URL = "http://localhost:9000/story?url="
+    let BASE_URL = "http://localhost:9000/story?url="
     //let BASE_URL = "http://yomills.com:9000/story?url="
-    let BASE_URL = "http://192.168.1.2:9000/story?url="
+    //let BASE_URL = "http://192.168.231.156:9000/story?url="
     
     var url : String!
     var title : String!
     var date : Date!
-    var description : String!
+    var storyDescription : String!
     var category : String!
     var feedName : String!
     var contents : String!
     var themeFetched : String!
     
+    func toString() -> String {
+        return "\(url!)\n\(title!)\n\(date!)\n\(category!)\n\(feedName!)\n\(themeFetched!)\n\(storyDescription!)\n\(contents!)"
+    }
+    
     init(_ url: String, _ title : String, _ date : Date, _ description : String, _ feedName : String, _ category : String) {
         self.url = url
         self.title = title
         self.date = date
-        self.description = description
+        self.storyDescription = description
         self.category = category
         self.feedName = feedName
     }
@@ -42,6 +46,8 @@ class Story {
             print("already fetched.")
             completed()
         } else {
+        
+            print("fetching from server")
             
             var storyUrl = "\(BASE_URL)\(url!)&theme=\(theme)"
             
@@ -53,6 +59,12 @@ class Story {
                // print("Response String: \(response.result.value)")
                 self.contents = response.result.value
                 self.themeFetched = theme
+                
+                //print(self.toString())
+                //let storyManager = StoryFileManager()
+                //storyManager.saveStoryToFile(self)
+                //storyManager.loadStoryFromFile(self.title, theme)
+                
                 completed()
             }
         }

@@ -55,9 +55,9 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         activeStories = []
 
         //Debug feeds
-        let a = ["http://rss.cbc.ca/lineup/canada.xml", "http://rss.cbc.ca/lineup/politics.xml", "http://rss.cbc.ca/lineup/health.xml"]
-        let userDefaults = UserDefaults()
-        userDefaults.set(a, forKey: "feed_urls")
+        //let a = ["http://rss.cbc.ca/lineup/canada.xml", "http://rss.cbc.ca/lineup/politics.xml", "http://rss.cbc.ca/lineup/health.xml"]
+        //let userDefaults = UserDefaults()
+        //userDefaults.set(a, forKey: "feed_urls")
         //userDefaults.removeObject(forKey: "feed_urls")
 
         feedManager = FeedManager()
