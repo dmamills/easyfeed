@@ -15,10 +15,12 @@ class StoryViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var webView: UIWebView!
     
+    
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer is UITapGestureRecognizer {
                 dismiss(animated: true, completion: nil)
         }
+        
 
         return true
     }
@@ -29,6 +31,7 @@ class StoryViewController: UIViewController, UIGestureRecognizerDelegate {
         doubleTapGesture.delegate = self
 
         webView.scrollView.addGestureRecognizer(doubleTapGesture)
+        
     }
 
     override func viewDidLoad() {

@@ -11,6 +11,7 @@ import UIKit
 class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     let CELL_ID : String = "StoryCell"
+    let storyFileManager = StoryFileManager()
 
     var feedManager : FeedManager!
     var rssFeeds : [RssFeed]!
@@ -32,6 +33,8 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let userDefaults = UserDefaults()
         let themeDark = userDefaults.bool(forKey: "selected_theme")
 
+        storyFileManager.loadStories()
+        
         if themeDark { 
             refreshControl.backgroundColor = DARK_BACKGROUND_COLOR
             storyFilterSegementControl.tintColor = DARK_FONT_COLOR

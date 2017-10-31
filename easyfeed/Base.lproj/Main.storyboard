@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Avenir.ttc">
+            <string>Avenir-Book</string>
+            <string>Avenir-Heavy</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Feed View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -26,7 +32,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="75"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="easyfeed" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bR8-3h-2SJ">
-                                        <rect key="frame" x="140.66666666666669" y="20" width="133.00000000000006" height="35"/>
+                                        <rect key="frame" x="140.66666666666666" y="20" width="132.99999999999997" height="35"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="133" id="huk-B9-wW6"/>
                                         </constraints>
@@ -78,14 +84,14 @@
                                         <rect key="frame" x="0.0" y="58" width="414" height="120"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="te2-My-W0K" id="KRK-QM-cYJ">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="119.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="119.66666666666667"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="opn-Zc-de7">
-                                                    <rect key="frame" x="290.66666666666674" y="81" width="116.33333333333331" height="31"/>
+                                                    <rect key="frame" x="290.66666666666669" y="81" width="116.33333333333331" height="31"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CBC | Top Stories News" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TQ1-dy-N0i">
-                                                            <rect key="frame" x="0.0" y="0.0" width="116.33333333333331" height="16"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="116.33333333333333" height="16"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="16" id="Viy-aw-MMG"/>
                                                             </constraints>
@@ -203,7 +209,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="35" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="hSs-sc-TEK">
-                                        <rect key="frame" x="0.0" y="75.333333333333343" width="374" height="125.00000000000003"/>
+                                        <rect key="frame" x="0.0" y="75.333333333333314" width="374" height="125"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="125" id="Vnb-c8-gKE"/>
@@ -259,10 +265,10 @@
                                         <rect key="frame" x="0.0" y="200.33333333333331" width="374" height="221.33333333333331"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="tiq-sq-707">
-                                                <rect key="frame" x="0.0" y="0.0" width="374" height="31.999999999999972"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="374" height="32"/>
                                                 <subviews>
                                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Feed URL" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9PM-bw-zHy">
-                                                        <rect key="frame" x="0.0" y="0.0" width="301" height="31.999999999999972"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="301" height="32"/>
                                                         <color key="backgroundColor" red="0.96851557489999995" green="0.96407788989999998" blue="1" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <color key="tintColor" red="0.96851557489999995" green="0.96407788989999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <color key="textColor" red="0.96851557489999995" green="0.96407788989999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -270,7 +276,7 @@
                                                         <textInputTraits key="textInputTraits" spellCheckingType="no" keyboardType="URL" keyboardAppearance="alert"/>
                                                     </textField>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x6t-hV-Tag">
-                                                        <rect key="frame" x="301" y="0.0" width="73" height="31.999999999999972"/>
+                                                        <rect key="frame" x="301" y="0.0" width="73" height="32"/>
                                                         <color key="backgroundColor" red="0.96851557489999995" green="0.96407788989999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="73" id="Uja-44-DwW"/>
@@ -286,7 +292,7 @@
                                                 </subviews>
                                             </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iNI-L6-Qxx">
-                                                <rect key="frame" x="0.0" y="51.999999999999972" width="374" height="19.333333333333371"/>
+                                                <rect key="frame" x="0.0" y="51.999999999999972" width="374" height="19.333333333333329"/>
                                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
                                                 <color key="textColor" red="0.85622223984771573" green="0.20147438501751727" blue="0.17403652292233515" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>

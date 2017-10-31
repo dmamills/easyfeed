@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import GRDB
 
 
 class Story {
@@ -18,6 +19,7 @@ class Story {
     //let BASE_URL = "http://yomills.com:9000/story?url="
     //let BASE_URL = "http://192.168.231.156:9000/story?url="
     
+    var id : Int64?
     var url : String!
     var title : String!
     var date : Date!
@@ -29,6 +31,19 @@ class Story {
     
     func toString() -> String {
         return "\(url!)\n\(title!)\n\(date!)\n\(category!)\n\(feedName!)\n\(themeFetched!)\n\(storyDescription!)\n\(contents!)"
+    }
+    
+    func toArgs() -> [Any] {
+        return [
+            url,
+            title,
+            date,
+            storyDescription,
+            category,
+            feedName,
+            contents,
+            themeFetched
+        ]
     }
     
     init(_ url: String, _ title : String, _ date : Date, _ description : String, _ feedName : String, _ category : String) {
@@ -61,9 +76,8 @@ class Story {
                 self.themeFetched = theme
                 
                 //print(self.toString())
-                //let storyManager = StoryFileManager()
-                //storyManager.saveStoryToFile(self)
-                //storyManager.loadStoryFromFile(self.title, theme)
+                let storyManager = StoryFileManager()
+                storyManager.insertStory(self)
                 
                 completed()
             }

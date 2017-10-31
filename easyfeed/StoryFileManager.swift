@@ -7,55 +7,91 @@
 //
 
 import Foundation
+import GRDB
 
 class StoryFileManager {
     
-    let fileManager : FileManager
+    var dbQueue : DatabaseQueue?
     
     init() {
-        fileManager = FileManager.default
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first! as NSString
+        let databasePath = documentsPath.appendingPathComponent("db.sqlite")
+        dbQueue = try! DatabaseQueue(path: databasePath)
+        
+        createTable()
     }
     
-    func doesExist(_ title : String, _ theme : String) -> Bool {
-        let filePath = getPathToStory(title, theme)
-        return fileManager.fileExists(atPath: filePath)
-    }
+    func loadStories() -> [Story] {
     
-    func loadStoryFromFile(_ title : String, _ theme : String) -> Story? {
-        
-        let safeTitle = convertTitleForFile(title)
-        let filePath = getPathToStory(safeTitle, theme);
-        
+        var stories : [Story] = []
         do {
-            let contents = try String(contentsOfFile: filePath)
-            print("got story")
+            try dbQueue?.inDatabase({ db in
+                let rows = try Row.fetchCursor(db, "SELECT * FROM stories")
+                
+                while let row = try rows.next() {
+                    stories.append(parseRow(row))
+                }
+            })
         } catch {
-            print("error loading file.")
+            print("error fetching stories")
         }
         
-        return nil
+        return stories
     }
     
-    func saveStoryToFile(_ story : Story) {
+    private func parseRow(_ row : Row) -> Story {
+        let id : Int64 = row.value(named: "id")
+        let url : String = row.value(named: "url")
+        let title : String = row.value(named: "title")
+        let date : Date = row.value(named: "date")
+        let description : String = row.value(named: "description")
+        let category : String = row.value(named: "category")
+        let feedName : String = row.value(named: "feedName")
+        let contents : String = row.value(named: "contents")
+        let themeFetched : String = row.value(named: "themeFetched")
         
-        let safeTitle = convertTitleForFile(story.title ?? "")
-        let filePath = getPathToStory(safeTitle, story.themeFetched);
-        fileManager.createFile(atPath: filePath, contents: story.toString().data(using: String.Encoding.utf8), attributes: nil)
+        let story = Story(url, title, date, description, feedName, category)
+        
+        story.id = id
+        story.contents = contents
+        story.themeFetched = themeFetched
+        
+        return story
     }
     
-    private func convertTitleForFile(_ title : String) -> String {
-        let invalidCharacters = [ "'", "\"", "\\", "/", " ",".", ","]
-        var safeTitle = title
-        for var c in invalidCharacters {
-            safeTitle = safeTitle.replacingOccurrences(of: c, with: "_")
+    private func createTable() {
+        do {
+        try dbQueue?.inDatabase({ db in
+            try db.execute(
+                "CREATE TABLE IF NOT EXISTS stories (" +
+                    "id INTEGER PRIMARY KEY, " +
+                    "title TEXT NOT NULL, " +
+                    "url TEXT NOT NULL, " +
+                    "date DATETIME NOT NULL, " +
+                    "description TEXT NOT NULL, " +
+                    "category TEXT NOT NULL, " +
+                    "feedName TEXT NOT NULL, " +
+                    "contents TEXT NOT NULL, " +
+                    "themeFetched TEXT NOT NULL" +
+                ")")
+            })
+        } catch {
+            print("Create Table Error.")
+        }
+    }
+    
+    func insertStory(_ story : Story) -> Bool {
+        do {
+        
+            try dbQueue?.inDatabase({ db in
+                try db.execute("INSERT INTO stories (title, url, date, description, category, feedName, contents, themeFetched) VALUES (?,?,?,?,?,?,?,?)", arguments: [story.title, story.url, story.date, story.storyDescription, story.category, story.feedName, story.contents, story.themeFetched])
+            })
+        } catch {
+            print("unable to insert.")
+            return false
         }
         
-        return safeTitle
-    }
-    
-    private func getPathToStory(_ title: String, _ theme : String) -> String {
-        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
-        let url = URL(string: path)
-        return url!.appendingPathComponent("\(title)-\(theme).txt").absoluteString
+        print("inserted!")
+        return true;
     }
 }
