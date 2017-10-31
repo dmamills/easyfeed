@@ -32,8 +32,6 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
         let userDefaults = UserDefaults()
         let themeDark = userDefaults.bool(forKey: "selected_theme")
-
-        storyFileManager.loadStories()
         
         if themeDark { 
             refreshControl.backgroundColor = DARK_BACKGROUND_COLOR
@@ -105,6 +103,9 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if feeds != nil {
                 self.rssFeeds = feeds
                 self.rssFeeds.forEach(self.addFeedToStories)
+                
+                
+                self.mergeSavedStories();
 
                 DispatchQueue.main.async {
 
@@ -163,6 +164,42 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
+    /**
+     * Takes the stories loaded from sqlite and adds them to the list, matching feed stories where possible.
+     */
+    private func mergeSavedStories() {
+        let savedStories = storyFileManager.loadStories()
+        
+        let currentUrls = self.stories.map({ (item) -> String in
+            return item.url
+        })
+        
+        let matchedStories = savedStories.filter({ (s) -> Bool in
+            return currentUrls.contains(s.url)
+        })
+        
+        matchedStories.forEach({story in
+            let matchedStory = self.stories.first(where: {(s) -> Bool in
+                return s.url == story.url
+            })
+            matchedStory?.id = story.id
+            matchedStory?.contents = story.contents
+            matchedStory?.themeFetched = story.themeFetched
+        })
+        
+        let unmatchedStories = savedStories.filter({ (s) -> Bool in
+            return !currentUrls.contains(s.url)
+        })
+        
+        unmatchedStories.forEach({ s in
+            self.stories.append(s)
+        })
+        
+    }
+    
+    /**
+     *
+     */
     private func addFeedToStories(_ feed : RssFeed) {
         //get a list of all currently displayed stories urls
         let currentUrls = self.stories.map({ (item) -> String in

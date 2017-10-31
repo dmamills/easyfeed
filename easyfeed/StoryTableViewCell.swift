@@ -34,6 +34,8 @@ class StoryTableViewCell: UITableViewCell {
             self.story.contents = nil
             self.downloadBtn.setImage(UIImage(named:"star-unselected"), for: UIControlState.normal)
             print("clear from saved")
+            
+            self.story.clear();
         } else {
             print("download story")
             story.loadStory(currentTheme, showImages, completed: {

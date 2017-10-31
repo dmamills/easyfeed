@@ -83,4 +83,13 @@ class Story {
             }
         }
     }
+    
+    func clear() -> Bool {
+        let storyManager = StoryFileManager()
+        if id != nil {
+            return storyManager.remove(id!)
+        } else {
+            return true
+        }
+    }
 }

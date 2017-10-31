@@ -80,6 +80,22 @@ class StoryFileManager {
         }
     }
     
+    func remove(_ id : Int64) -> Bool {
+        
+        do {
+            try dbQueue?.inDatabase({ db in
+
+                try db.execute("DELETE FROM stories WHERE id = \(id)")
+                print("removed item")
+            })
+        } catch {
+            print("error occured removing.")
+            return false
+        }
+        
+        return true
+    }
+    
     func insertStory(_ story : Story) -> Bool {
         do {
         
